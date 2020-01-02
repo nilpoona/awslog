@@ -12,7 +12,14 @@ type (
 )
 
 func (f fetcherMock) Fetch(ctx context.Context, logGroupName string) ([]string, error) {
-	panic("implement me")
+	return []string{
+		`{"level":"Info","message":"foobar"}`,
+		/*
+			`{"level":"Error","message":"foobar"}`,
+			`{"level":"Debug","message":"foobar"}`,
+			`{"level":"Critical","message":"foobar"}`,
+		*/
+	}, nil
 }
 
 func main() {
@@ -26,7 +33,5 @@ func main() {
 		panic(err)
 	}
 
-	if err := v.Run(); err != nil {
-		panic(err)
-	}
+	v.Run(context.Background())
 }

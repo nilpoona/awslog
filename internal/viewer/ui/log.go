@@ -1,12 +1,38 @@
 package ui
 
-import tui "github.com/marcusolsson/tui-go"
+import (
+	tui "github.com/marcusolsson/tui-go"
+)
+
+type (
+	Log struct {
+		box  *tui.Box
+		logs *tui.Grid
+	}
+)
+
+func (l *Log) SetTitle(logTitle string) {
+	l.box.SetTitle(logTitle)
+}
+
+func (l *Log) Draw(logs []string) {
+	for _, log := range logs {
+		label := tui.NewLabel(log)
+		l.logs.AppendRow(label)
+	}
+}
 
 // newLog Returns a UI component for displaying logs
-func newLog() *tui.Box {
-	logViewer := tui.NewVBox(tui.NewLabel("log ga deruyo"))
+func newLog() *Log {
+	logViewer := tui.NewVBox()
 	logViewer.SetTitle("log")
 	logViewer.SetBorder(true)
 	logViewer.SetSizePolicy(tui.Expanding, tui.Expanding)
-	return logViewer
+	logs := tui.NewGrid(1, 0)
+	logViewer.Append(logs)
+	return &Log{
+		box:  logViewer,
+		logs: logs,
+	}
+
 }
