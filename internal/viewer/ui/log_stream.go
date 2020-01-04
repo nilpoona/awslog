@@ -22,6 +22,11 @@ func (l *LogStream) List() *tui.List {
 	return l.list
 }
 
+// selectDefaultItem
+func (l *LogStream) selectDefaultItem() {
+	l.list.Select(defaultSelectIndex)
+}
+
 const defaultSelectIndex = 0
 
 // newLogStream Returns a UI component that displays a list of log streams
@@ -33,7 +38,6 @@ func newLogStream(streams []string) *LogStream {
 		items = append(items, stream)
 	}
 	list.AddItems(items...)
-	list.Select(defaultSelectIndex)
 	box.SetBorder(true)
 	box.SetTitle("log streams")
 	streamList := tui.NewScrollArea(list)

@@ -25,6 +25,7 @@ type (
 
 // Run Start execution of UI thread
 func (u *UI) Run() {
+	u.children.logStream.selectDefaultItem()
 	err := u.root.Run()
 	if err != nil {
 		panic(err)

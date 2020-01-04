@@ -14,11 +14,10 @@ type (
 func (f fetcherMock) Fetch(ctx context.Context, logGroupName string) ([]string, error) {
 	return []string{
 		`{"level":"Info","message":"foobar"}`,
-		/*
-			`{"level":"Error","message":"foobar"}`,
-			`{"level":"Debug","message":"foobar"}`,
-			`{"level":"Critical","message":"foobar"}`,
-		*/
+		`{"level":"Error","message":"foobar"}`,
+		`{"level":"Debug","message":"foobar"}`,
+		`{"level":"Critical","message":"foobar"}`,
+		`{"level":"Warn","message":"foobar"}`,
 	}, nil
 }
 
