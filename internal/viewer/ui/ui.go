@@ -40,6 +40,9 @@ func (u *UI) handleKeyUp() {
 }
 
 func (u *UI) handleKeyEnter() {
+	if !u.children.logStream.IsFocused() {
+		return
+	}
 	stream := u.children.logStream.SelectedStreamName()
 	u.children.log.SetTitle(stream)
 	ctx := context.Background()
@@ -50,6 +53,9 @@ func (u *UI) handleKeyEnter() {
 	u.mux.Lock()
 	u.children.log.Draw(logs)
 	u.mux.Unlock()
+
+	u.children.logStream.OutOfFocus()
+	u.children.log.Focused()
 }
 
 func (u *UI) handleKeyTab() {
