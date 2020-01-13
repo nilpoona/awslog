@@ -43,6 +43,7 @@ func (u *UI) handleKeyEnter() {
 	if !u.children.logStream.IsFocused() {
 		return
 	}
+	u.children.log.Empty()
 	stream := u.children.logStream.SelectedStreamName()
 	u.children.log.SetTitle(stream)
 	ctx := context.Background()
