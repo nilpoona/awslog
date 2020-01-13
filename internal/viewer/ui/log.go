@@ -54,6 +54,26 @@ func (l *Log) Draw(logs []string) {
 	}
 }
 
+// OutOfFocus out of focus
+func (l *Log) OutOfFocus() {
+	l.scrollArea.SetFocused(false)
+}
+
+// Focused Focus on
+func (l *Log) Focused() {
+	l.scrollArea.SetFocused(true)
+}
+
+// IsFocused Determine if focus is on
+func (l *Log) IsFocused() bool {
+	return l.scrollArea.IsFocused()
+}
+
+// Empty Empty the log display area
+func (l *Log) Empty() {
+	l.logs.RemoveRows()
+}
+
 // newLog Returns a UI component for displaying logs
 func newLog() *Log {
 	logViewer := tui.NewVBox()
@@ -63,7 +83,6 @@ func newLog() *Log {
 	logs := tui.NewGrid(1, 0)
 	scrollArea := tui.NewScrollArea(logs)
 	logViewer.Append(scrollArea)
-
 	return &Log{
 		box:        logViewer,
 		scrollArea: scrollArea,

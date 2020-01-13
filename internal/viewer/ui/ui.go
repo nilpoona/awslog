@@ -25,7 +25,6 @@ type (
 
 // Run Start execution of UI thread
 func (u *UI) Run() {
-	u.children.logStream.selectDefaultItem()
 	err := u.root.Run()
 	if err != nil {
 		panic(err)
@@ -33,23 +32,15 @@ func (u *UI) Run() {
 }
 
 func (u *UI) handleKeyDown() {
-	nextIndex := u.children.logStream.List().Selected() + 1
-	if nextIndex > len(u.logStreams)-1 {
-		nextIndex = 0
-	}
-	u.children.logStream.List().Select(nextIndex)
+	u.children.logStream.Select(MoveDown)
 }
 
 func (u *UI) handleKeyUp() {
-	nextIndex := u.children.logStream.List().Selected() - 1
-	if nextIndex < 0 {
-		nextIndex = len(u.logStreams) - 1
-	}
-	u.children.logStream.List().Select(nextIndex)
+	u.children.logStream.Select(MoveUp)
 }
 
 func (u *UI) handleKeyEnter() {
-	stream := u.children.logStream.List().SelectedItem()
+	stream := u.children.logStream.SelectedStreamName()
 	u.children.log.SetTitle(stream)
 	ctx := context.Background()
 	logs, err := u.fetchLog(ctx, stream)
@@ -61,11 +52,26 @@ func (u *UI) handleKeyEnter() {
 	u.mux.Unlock()
 }
 
+func (u *UI) handleKeyTab() {
+	if u.children.logStream.IsFocused() {
+		u.children.logStream.OutOfFocus()
+		u.children.log.Focused()
+		return
+	}
+
+	if u.children.log.IsFocused() {
+		u.children.log.OutOfFocus()
+		u.children.logStream.Focused()
+		return
+	}
+}
+
 func (u *UI) bind() {
 	u.root.SetKeybinding("Esc", func() { u.root.Quit() })
 	u.root.SetKeybinding("Down", func() { u.handleKeyDown() })
 	u.root.SetKeybinding("Up", func() { u.handleKeyUp() })
 	u.root.SetKeybinding("Enter", func() { u.handleKeyEnter() })
+	u.root.SetKeybinding("Tab", func() { u.handleKeyTab() })
 }
 
 func (u *UI) SetFetchLog(fetchLog func(ctx context.Context, logStream string) ([]string, error)) {
@@ -76,6 +82,7 @@ func (u *UI) SetFetchLog(fetchLog func(ctx context.Context, logStream string) ([
 func New(streams []string) (*UI, error) {
 	wrap := tui.NewHBox()
 	logStream := newLogStream(streams)
+	logStream.Focused()
 	logViewer := newLog()
 	wrap.Append(logStream.Box())
 	wrap.Append(logViewer.box)
