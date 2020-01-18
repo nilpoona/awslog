@@ -34,17 +34,20 @@ func (l *Log) logLabel(log string) *tui.Label {
 
 	switch {
 	case strings.Contains(level, "error"):
-		label.SetStyleName(themeErrorLabel)
+		label.SetStyleName(themeError.String())
 	case strings.Contains(level, "warn"):
-		label.SetStyleName(themeWarnLabel)
+		label.SetStyleName(themeWarn.String())
 	case strings.Contains(level, "info"):
-		label.SetStyleName(themeInfoLabel)
+		label.SetStyleName(themeInfo.String())
 	case strings.Contains(level, "debug"):
-		label.SetStyleName(themeDebugLabel)
+		label.SetStyleName(themeDebug.String())
+	case strings.Contains(level, "critical"):
+		label.SetStyleName(themeError.String())
+	case strings.Contains(level, "fatal"):
+		label.SetStyleName(themeError.String())
 	default:
 		return label
 	}
-	label.SetStyleName(themeWarnLabel)
 	return label
 }
 

@@ -1,42 +1,77 @@
 package ui
 
-import tui "github.com/marcusolsson/tui-go"
+import (
+	"fmt"
 
-const (
-	themeErrorLabel = "label.error"
-	themeWarnLabel  = "label.warn"
-	themeInfoLabel  = "label.info"
-	themeDebugLabel = "label.debug"
+	tui "github.com/marcusolsson/tui-go"
 )
 
-func newThemeErrorLabel() *tui.Theme {
-	t := tui.NewTheme()
-	t.SetStyle(themeErrorLabel, tui.Style{
+type (
+	themeName string
+)
+
+const (
+	themeDefault themeName = "default"
+	themeError   themeName = "error"
+	themeWarn    themeName = "warn"
+	themeInfo    themeName = "info"
+	themeDebug   themeName = "debug"
+)
+
+func labelStyleName(name themeName) string {
+	return fmt.Sprintf("label.%s", name.String())
+}
+
+func (t themeName) String() string {
+	return string(t)
+}
+
+func newDefaultStyle() tui.Style {
+	return tui.Style{
+		Fg: tui.ColorWhite,
+		Bg: tui.ColorBlack,
+	}
+}
+
+func newErrorStyle() tui.Style {
+	return tui.Style{
 		Fg: tui.ColorRed,
-	})
-	return t
+		Bg: tui.ColorDefault,
+	}
 }
 
-func newThemeWarnLabel() *tui.Theme {
-	t := tui.NewTheme()
-	t.SetStyle(themeWarnLabel, tui.Style{
+func newWarnStyle() tui.Style {
+	return tui.Style{
 		Fg: tui.ColorYellow,
-	})
-	return t
+		Bg: tui.ColorDefault,
+	}
 }
 
-func newThemeInfoLabel() *tui.Theme {
-	t := tui.NewTheme()
-	t.SetStyle(themeInfoLabel, tui.Style{
+func newInfoStyle() tui.Style {
+	return tui.Style{
 		Fg: tui.ColorBlue,
-	})
-	return t
+		Bg: tui.ColorDefault,
+	}
 }
 
-func newThemeDebugLabel() *tui.Theme {
-	t := tui.NewTheme()
-	t.SetStyle(themeDebugLabel, tui.Style{
+func newDebugStyle() tui.Style {
+	return tui.Style{
 		Fg: tui.ColorCyan,
+	}
+}
+
+func newTheme() *tui.Theme {
+	t := tui.NewTheme()
+	t.SetStyle(labelStyleName(themeError), newErrorStyle())
+	t.SetStyle(labelStyleName(themeInfo), newInfoStyle())
+	t.SetStyle(labelStyleName(themeDebug), newDebugStyle())
+	t.SetStyle(labelStyleName(themeWarn), newWarnStyle())
+	t.SetStyle(labelStyleName(themeDefault), newDebugStyle())
+	t.SetStyle("list.item", newDefaultStyle())
+	t.SetStyle("list.item.selected", tui.Style{
+		Fg: tui.ColorBlack,
+		Bg: tui.ColorWhite,
 	})
+	t.SetStyle("normal", newDefaultStyle())
 	return t
 }

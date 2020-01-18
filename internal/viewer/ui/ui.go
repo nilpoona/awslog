@@ -98,6 +98,7 @@ func New(streams []string) (*UI, error) {
 	if err != nil {
 		return nil, err
 	}
+	r.SetTheme(newTheme())
 	u := &UI{
 		logStreams: streams,
 		root:       r,
